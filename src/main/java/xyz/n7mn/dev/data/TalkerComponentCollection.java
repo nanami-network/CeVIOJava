@@ -6,19 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TalkerComponentCollection {
-    private final Map<String, TalkerComponentStructure> components = new HashMap<>();
+    private final Map<String, TalkerComponent> components = new HashMap<>();
 
-    public TalkerComponentCollection(TalkerComponentStructure[] talkerComponentStructures) {
+    public TalkerComponentCollection(CastSettings settings, TalkerComponentStructure[] talkerComponentStructures) {
         for (TalkerComponentStructure component : talkerComponentStructures) {
-            components.put(component.name, component);
+            components.put(component.name, new TalkerComponent(settings, component));
         }
     }
 
-    public TalkerComponentStructure getComponent(String id) {
+    public TalkerComponent getComponent(String id) {
         return components.get(id);
     }
 
-    public Map<String, TalkerComponentStructure> getComponents() {
+    public Map<String, TalkerComponent> getComponents() {
         return components;
     }
 }

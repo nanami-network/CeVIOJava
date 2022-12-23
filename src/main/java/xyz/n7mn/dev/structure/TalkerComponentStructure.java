@@ -15,6 +15,12 @@ public class TalkerComponentStructure extends Structure {
         read();
     }
 
+    public TalkerComponentStructure() {
+        super();
+        setStringEncoding("Shift-JIS");
+        read();
+    }
+
     public static class ByReference extends TalkerComponentStructure implements Structure.ByReference {
         public ByReference(Pointer pointer) {
             super(pointer);

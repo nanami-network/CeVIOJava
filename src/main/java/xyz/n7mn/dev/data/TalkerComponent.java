@@ -1,13 +1,12 @@
 package xyz.n7mn.dev.data;
 
 import xyz.n7mn.dev.CeVIOJava;
-import xyz.n7mn.dev.impl.CeVIOImpl;
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
 public class TalkerComponent {
     private final CeVIOJava cevio;
     private final CastSettings settings;
-    private final TalkerComponentStructure structure;
+    private TalkerComponentStructure structure;
 
     public TalkerComponent(CastSettings settings, TalkerComponentStructure structure) {
         this.cevio = settings.getCevio();
@@ -24,6 +23,7 @@ public class TalkerComponent {
     }
 
     public int getValue() {
+        sync();
         return this.structure.value;
     }
 
@@ -34,11 +34,11 @@ public class TalkerComponent {
     }
 
     public void sync() {
-        cevio.setCastComponent(settings.getStructure(), structure);
+        this.structure = cevio.getTalkerComponentStructure(settings, structure.name);
     }
 
     public void write() {
-        cevio.setCastComponent(settings.getStructure(), structure);
+        cevio.setTalkerComponent(settings, this);
     }
 
     public CeVIOJava getCevio() {

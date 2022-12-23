@@ -4,6 +4,7 @@ import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
 import xyz.n7mn.dev.data.CastSettings;
 import xyz.n7mn.dev.data.TalkerComponent;
+import xyz.n7mn.dev.data.TalkerComponentCollection;
 import xyz.n7mn.dev.impl.CeVIOImpl;
 import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
@@ -34,14 +35,15 @@ public class CeVIOJava {
                 System.out.println(v);
                 CastSettings structure = getCastSettings(v);
                 System.out.println(structure);
+                /*TalkerComponentCollection component = getTalkerComponents(structure);
+                for (TalkerComponent component1 : component.getComponents().values()) {
+                    component1.setValue(21);
+                }*/
+
                 structure.speak("あいうえお！");
                 structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa" + structure.getCast() +  ".wav");
-                TalkerComponentStructure[] component = getCastComponents(structure.getStructure());
-                for (TalkerComponentStructure component1 : component) {
-                    System.out.println(component1.id);
-                    System.out.println(component1.name);
-                    System.out.println(component1.value);
-                }
+
+
             });
             System.out.println("lag:" + (System.currentTimeMillis() - start));
         } catch (Throwable ex) {
@@ -67,7 +69,6 @@ public class CeVIOJava {
         checkHostStarted();
         return impl.HostVersion();
     }
-
 
     /**
      * @param noWait
@@ -164,17 +165,33 @@ public class CeVIOJava {
      * @param settings キャストデータ
      * @return タルカーコンポーネント
      */
-    public TalkerComponentStructure[] getCastComponents(CastSettingsStructure settings) {
+    public TalkerComponentCollection getTalkerComponents(CastSettings settings) {
         checkHostStarted();
         PointerByReference ref = new PointerByReference();
-        final int length = impl.GetComponents(settings, ref);
+        final int length = impl.GetComponents(settings.getStructure(), ref);
         TalkerComponentStructure.ByReference byReference = new TalkerComponentStructure.ByReference(ref.getValue());
-        return (TalkerComponentStructure.ByReference[]) byReference.toArray(length);
+        return new TalkerComponentCollection(settings, (TalkerComponentStructure.ByReference[]) byReference.toArray(length));
     }
 
-    public void setCastComponent(CastSettingsStructure settings, TalkerComponentStructure component) {
+    public TalkerComponent getTalkerComponent(CastSettings settings, String name) {
+        return new TalkerComponent(settings, getTalkerComponentStructure(settings, name));
+    }
+
+    public TalkerComponentStructure getTalkerComponentStructure(CastSettings settings, String name) {
         checkHostStarted();
-        impl.SetComponent(settings, component);
+        TalkerComponentStructure structure = new TalkerComponentStructure();
+        impl.GetComponent(settings.getStructure(), Native.toByteArray(name, "Shift-JIS"), structure);
+        return structure;
+    }
+
+    public void setTalkerComponent(CastSettings settings, TalkerComponent component) {
+        checkHostStarted();
+        impl.SetComponent(settings.getStructure(), component.getStructure());
+    }
+
+    public void setTalkerComponentStructure(CastSettings settings, TalkerComponentStructure component) {
+        checkHostStarted();
+        impl.SetComponent(settings.getStructure(), component);
     }
 
     /**
