@@ -25,14 +25,14 @@ public class CeVIOJava {
                 System.out.println(v);
                 CastSettings structure = getCastSettings(v);
                 structure.setVolume(100);
-                sync(structure.getStructure());
+                write(structure.getStructure());
             });
 
             getAvailableCastsList().forEach(v -> {
                 System.out.println(v);
                 CastSettings structure = getCastSettings(v);
                 System.out.println(structure);
-                structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa.wav");
+                structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa" + structure.getCast() +  ".wav");
             });
             System.out.println("lag:" + (System.currentTimeMillis() - start));
         } catch (Throwable ex) {
@@ -75,6 +75,12 @@ public class CeVIOJava {
 
     }
 
+    /**
+     * @param structure ストラクチャー
+     * @param text 言わせたい文字
+     * @param path 保存先 (最後に .wavをつけてください！)
+     * @return 結果
+     */
     public boolean save(CastSettingsImpl structure, String text, String path) {
         return impl.OutputWaveToFile(structure, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
     }
@@ -82,7 +88,7 @@ public class CeVIOJava {
     /**
      * @param structure APIサイドと同期します
      */
-    public void sync(CastSettingsImpl structure) {
+    public void write(CastSettingsImpl structure) {
         impl.setTalker(structure);
     }
 
@@ -94,6 +100,16 @@ public class CeVIOJava {
         CastSettingsImpl data = new CastSettingsImpl();
         impl.getTalker(Native.toByteArray(cast, "Shift-JIS"), data);
         return new CastSettings(this, data);
+    }
+
+    /**
+     * @param cast キャスト名
+     * @return キャストの情報
+     */
+    public CastSettingsImpl getCastSettingsImpl(String cast) {
+        CastSettingsImpl data = new CastSettingsImpl();
+        impl.getTalker(Native.toByteArray(cast, "Shift-JIS"), data);
+        return data;
     }
 
     /**

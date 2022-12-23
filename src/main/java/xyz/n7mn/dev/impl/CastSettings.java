@@ -5,7 +5,7 @@ import xyz.n7mn.dev.structure.CastSettingsImpl;
 
 public class CastSettings {
     private final CeVIOJava cevio;
-    private final CastSettingsImpl structure;
+    private CastSettingsImpl structure;
 
     public CastSettings(CeVIOJava cevio, CastSettingsImpl structure) {
         this.cevio = cevio;
@@ -17,42 +17,46 @@ public class CastSettings {
     }
 
     public int getSpeed() {
+        sync();
         return structure.speed;
     }
 
     public CastSettings setSpeed(int speed) {
         structure.speed = speed;
-        sync();
+        write();
         return this;
     }
 
     public int getVolume() {
+        sync();
         return structure.volume;
     }
 
     public CastSettings setVolume(int volume) {
         structure.volume = volume;
-        sync();
+        write();
         return this;
     }
 
     public int getAlpha() {
+        sync();
         return structure.alpha;
     }
 
     public CastSettings setAlpha(int alpha) {
         structure.alpha = alpha;
-        sync();
+        write();
         return this;
     }
 
     public int getToneScale() {
+        sync();
         return structure.toneScale;
     }
 
     public CastSettings setToneScale(int toneScale) {
         structure.alpha = toneScale;
-        sync();
+        write();
         return this;
     }
 
@@ -65,7 +69,11 @@ public class CastSettings {
     }
 
     public void sync() {
-        cevio.sync(structure);
+        this.structure = cevio.getCastSettingsImpl(structure.cast);
+    }
+
+    public void write() {
+        cevio.write(structure);
     }
 
     public CastSettingsImpl getStructure() {
