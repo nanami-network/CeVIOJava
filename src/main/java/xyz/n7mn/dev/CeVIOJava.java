@@ -2,8 +2,10 @@ package xyz.n7mn.dev;
 
 import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
+import xyz.n7mn.dev.impl.CastSettings;
+import xyz.n7mn.dev.impl.CeVIOImpl;
 import xyz.n7mn.dev.structure.StringArrayStructure;
-import xyz.n7mn.dev.structure.TalkDataStructure;
+import xyz.n7mn.dev.structure.CastSettingsImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,16 @@ public class CeVIOJava {
             long start = System.currentTimeMillis();
             getAvailableCastsList().forEach(v -> {
                 System.out.println(v);
-                System.out.println(getTalkData(v));
+                CastSettings structure = getCastSettings(v);
+                structure.setVolume(100);
+                sync(structure.getStructure());
+            });
+
+            getAvailableCastsList().forEach(v -> {
+                System.out.println(v);
+                CastSettings structure = getCastSettings(v);
+                System.out.println(structure);
+                structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa.wav");
             });
             System.out.println("lag:" + (System.currentTimeMillis() - start));
         } catch (Throwable ex) {
@@ -60,16 +71,29 @@ public class CeVIOJava {
         return HostStartResult.getByOriginal(impl.StartHost(noWait));
     }
 
-    public void speak(TalkDataStructure talkDataStructure, String text) {
-        //TODO: ..
-        //impl.Speak(Native.toByteArray(text, "Shift-JIS"));
+    public void speak(CastSettingsImpl castSettingsImpl, String text) {
 
     }
 
-    public TalkDataStructure getTalkData(String cast) {
-        TalkDataStructure data = new TalkDataStructure();
-        impl.getTalkData(Native.toByteArray(cast, "Shift-JIS"), data);
-        return data;
+    public boolean save(CastSettingsImpl structure, String text, String path) {
+        return impl.OutputWaveToFile(structure, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
+    }
+
+    /**
+     * @param structure APIサイドと同期します
+     */
+    public void sync(CastSettingsImpl structure) {
+        impl.setTalker(structure);
+    }
+
+    /**
+     * @param cast キャスト名
+     * @return キャストの設定情報
+     */
+    public CastSettings getCastSettings(String cast) {
+        CastSettingsImpl data = new CastSettingsImpl();
+        impl.getTalker(Native.toByteArray(cast, "Shift-JIS"), data);
+        return new CastSettings(this, data);
     }
 
     /**
