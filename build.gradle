@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+group 'xyz.n7mn.dev'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name 'jitpack'
+        url 'https://jitpack.io'
+    }
+}
+
+dependencies {
+    implementation group: 'net.java.dev.jna', name: 'jna', version: '5.5.0'
+    implementation group: 'net.java.dev.jna', name: 'jna-platform', version: '5.5.0'
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+build.dependsOn shadowJar
