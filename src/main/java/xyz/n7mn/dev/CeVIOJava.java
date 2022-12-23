@@ -6,6 +6,7 @@ import xyz.n7mn.dev.impl.CastSettings;
 import xyz.n7mn.dev.impl.CeVIOImpl;
 import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.CastSettingsImpl;
+import xyz.n7mn.dev.structure.TalkerComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,12 @@ public class CeVIOJava {
                 System.out.println(structure);
                 structure.speak("あいうえお！");
                 structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa" + structure.getCast() +  ".wav");
+                TalkerComponent[] component = getCastComponent(structure.getStructure());
+                for (TalkerComponent component1 : component) {
+                    System.out.println(component1.id);
+                    System.out.println(component1.name);
+                    System.out.println(component1.value);
+                }
             });
             System.out.println("lag:" + (System.currentTimeMillis() - start));
         } catch (Throwable ex) {
@@ -113,6 +120,18 @@ public class CeVIOJava {
         CastSettingsImpl data = new CastSettingsImpl();
         impl.GetTalker(Native.toByteArray(cast, "Shift-JIS"), data);
         return data;
+    }
+
+    /**
+     * @param settings キャストデータ
+     * @return タルカーコンポーネント
+     */
+    public TalkerComponent[] getCastComponent(CastSettingsImpl settings) {
+        checkHostStarted();
+        PointerByReference ref = new PointerByReference();
+        final int length = impl.GetComponents(settings, ref);
+        TalkerComponent.ByReference byReference = new TalkerComponent.ByReference(ref.getValue());
+        return (TalkerComponent.ByReference[]) byReference.toArray(length);
     }
 
     /**

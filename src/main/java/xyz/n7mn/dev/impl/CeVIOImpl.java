@@ -19,5 +19,6 @@ public interface CeVIOImpl extends Library {
     void SetTalker(CastSettingsImpl settings);
     void GetTalker(byte[] cast, CastSettingsImpl settings);
 
+    int GetComponents(CastSettingsImpl settings, PointerByReference reference);
     int AvailableCasts(PointerByReference reference);
 }
