@@ -73,8 +73,8 @@ public class CastSettings {
         speak(text, true);
     }
 
-    public void saveToFile(String text, String path) {
-        cevio.save(this, text, path);
+    public boolean saveToFile(String text, String path) {
+        return cevio.save(this, text, path);
     }
 
     public void sync() {

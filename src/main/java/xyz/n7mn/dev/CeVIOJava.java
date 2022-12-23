@@ -2,9 +2,9 @@ package xyz.n7mn.dev;
 
 import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
-import xyz.n7mn.dev.data.CastSettings;
-import xyz.n7mn.dev.data.TalkerComponent;
-import xyz.n7mn.dev.data.TalkerComponentCollection;
+import xyz.n7mn.dev.data.*;
+import xyz.n7mn.dev.data.enums.HostCloseMode;
+import xyz.n7mn.dev.data.enums.HostStartResult;
 import xyz.n7mn.dev.impl.CeVIOImpl;
 import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
@@ -12,44 +12,15 @@ import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CeVIOJava {
     private final CeVIOImpl impl;
 
     public CeVIOJava(CeVIOImpl impl, CeVIOBuilder builder) {
         this.impl = impl;
-
-        try {
-
-            //start(false);
-
-            long start = System.currentTimeMillis();
-            getAvailableCastsList().forEach(v -> {
-                System.out.println(v);
-                CastSettings structure = getCastSettings(v);
-                structure.setVolume(100);
-                setCastSettings(structure);
-            });
-
-            getAvailableCastsList().forEach(v -> {
-                System.out.println(v);
-                CastSettings structure = getCastSettings(v);
-                System.out.println(structure);
-                /*TalkerComponentCollection component = getTalkerComponents(structure);
-                for (TalkerComponent component1 : component.getComponents().values()) {
-                    component1.setValue(21);
-                }*/
-
-                structure.speak("あいうえお！");
-                structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa" + structure.getCast() +  ".wav");
-
-
-            });
-            System.out.println("lag:" + (System.currentTimeMillis() - start));
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        } finally {
-            //stop();
+        if (builder.isAutoStart() && !isHostStarted()) {
+            start(false);
         }
     }
 

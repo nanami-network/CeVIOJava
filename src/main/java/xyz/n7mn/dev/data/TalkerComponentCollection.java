@@ -2,8 +2,10 @@ package xyz.n7mn.dev.data;
 
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TalkerComponentCollection {
     private final Map<String, TalkerComponent> components = new HashMap<>();
@@ -18,7 +20,11 @@ public class TalkerComponentCollection {
         return components.get(id);
     }
 
-    public Map<String, TalkerComponent> getComponents() {
+    public Map<String, TalkerComponent> getAsList() {
         return components;
+    }
+
+    public Collection<TalkerComponent> getAsCollection() {
+        return components.values();
     }
 }
