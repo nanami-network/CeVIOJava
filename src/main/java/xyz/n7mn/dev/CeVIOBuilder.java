@@ -13,6 +13,6 @@ public class CeVIOBuilder {
     }
 
     public CeVIOJava create() {
-        return new CeVIOJava(Native.load("CeVIOJava.dll", CeVIOImpl.class));
+        return new CeVIOJava(Native.load("CeVIOJava.dll", CeVIOImpl.class), this);
     }
 }

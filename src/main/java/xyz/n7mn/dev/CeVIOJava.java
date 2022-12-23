@@ -1,6 +1,9 @@
 package xyz.n7mn.dev;
 
+import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
+import xyz.n7mn.dev.structure.StringArrayStructure;
+import xyz.n7mn.dev.structure.TalkDataStructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,18 +11,23 @@ import java.util.List;
 public class CeVIOJava {
     private final CeVIOImpl impl;
 
-    public CeVIOJava(CeVIOImpl impl) {
+    public CeVIOJava(CeVIOImpl impl, CeVIOBuilder builder) {
         this.impl = impl;
 
         try {
 
-            start(false);
+            //start(false);
 
-
+            long start = System.currentTimeMillis();
+            getAvailableCastsList().forEach(v -> {
+                System.out.println(v);
+                System.out.println(getTalkData(v));
+            });
+            System.out.println("lag:" + (System.currentTimeMillis() - start));
         } catch (Throwable ex) {
             ex.printStackTrace();
         } finally {
-            stop();
+            //stop();
         }
     }
 
@@ -37,7 +45,7 @@ public class CeVIOJava {
      */
     public String getVersion() {
         if (!impl.IsHostStarted()) {
-            throw new IllegalStateException("ホストが見つかりませんでした。 起動していますか？");
+            throw new IllegalStateException("ホストが見つかりませんでした");
         }
         return impl.HostVersion();
     }
@@ -52,10 +60,16 @@ public class CeVIOJava {
         return HostStartResult.getByOriginal(impl.StartHost(noWait));
     }
 
-    public void speak(Talker talker, String text) {
+    public void speak(TalkDataStructure talkDataStructure, String text) {
         //TODO: ..
         //impl.Speak(Native.toByteArray(text, "Shift-JIS"));
 
+    }
+
+    public TalkDataStructure getTalkData(String cast) {
+        TalkDataStructure data = new TalkDataStructure();
+        impl.getTalkData(Native.toByteArray(cast, "Shift-JIS"), data);
+        return data;
     }
 
     /**
@@ -88,6 +102,9 @@ public class CeVIOJava {
      * @return 利用可能なキャスト
      */
     public StringArrayStructure[] getAvailableCastsStructure() {
+        if (!impl.IsHostStarted()) {
+            throw new IllegalStateException("ホストが見つかりませんでした");
+        }
         PointerByReference ref = new PointerByReference();
         final int length = impl.AvailableCasts(ref);
         StringArrayStructure.ByReference byReference = new StringArrayStructure.ByReference(ref.getValue());
