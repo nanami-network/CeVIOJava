@@ -32,6 +32,7 @@ public class CeVIOJava {
                 System.out.println(v);
                 CastSettings structure = getCastSettings(v);
                 System.out.println(structure);
+                structure.speak("あいうえお！");
                 structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa" + structure.getCast() +  ".wav");
             });
             System.out.println("lag:" + (System.currentTimeMillis() - start));
@@ -55,11 +56,10 @@ public class CeVIOJava {
      * ホストが起動していない場合、エラーが発生します
      */
     public String getVersion() {
-        if (!impl.IsHostStarted()) {
-            throw new IllegalStateException("ホストが見つかりませんでした");
-        }
+        checkHostStarted();
         return impl.HostVersion();
     }
+
 
     /**
      * @param noWait
@@ -71,25 +71,29 @@ public class CeVIOJava {
         return HostStartResult.getByOriginal(impl.StartHost(noWait));
     }
 
-    public void speak(CastSettingsImpl castSettingsImpl, String text) {
 
+    public void speak(CastSettingsImpl castSettingsImpl, String text) {
+        checkHostStarted();
+        impl.Speak(castSettingsImpl, Native.toByteArray(text, "Shift-JIS"));
     }
 
     /**
-     * @param structure ストラクチャー
+     * @param castSettingsImpl ストラクチャー
      * @param text 言わせたい文字
      * @param path 保存先 (最後に .wavをつけてください！)
      * @return 結果
      */
-    public boolean save(CastSettingsImpl structure, String text, String path) {
-        return impl.OutputWaveToFile(structure, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
+    public boolean save(CastSettingsImpl castSettingsImpl, String text, String path) {
+        checkHostStarted();
+        return impl.OutputWaveToFile(castSettingsImpl, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
     }
 
     /**
      * @param structure APIサイドと同期します
      */
     public void write(CastSettingsImpl structure) {
-        impl.setTalker(structure);
+        checkHostStarted();
+        impl.SetTalker(structure);
     }
 
     /**
@@ -97,9 +101,7 @@ public class CeVIOJava {
      * @return キャストの設定情報
      */
     public CastSettings getCastSettings(String cast) {
-        CastSettingsImpl data = new CastSettingsImpl();
-        impl.getTalker(Native.toByteArray(cast, "Shift-JIS"), data);
-        return new CastSettings(this, data);
+        return new CastSettings(this, getCastSettingsImpl(cast));
     }
 
     /**
@@ -107,8 +109,9 @@ public class CeVIOJava {
      * @return キャストの情報
      */
     public CastSettingsImpl getCastSettingsImpl(String cast) {
+        checkHostStarted();
         CastSettingsImpl data = new CastSettingsImpl();
-        impl.getTalker(Native.toByteArray(cast, "Shift-JIS"), data);
+        impl.GetTalker(Native.toByteArray(cast, "Shift-JIS"), data);
         return data;
     }
 
@@ -156,6 +159,12 @@ public class CeVIOJava {
      */
     public void stop() {
         impl.CloseHost(0);
+    }
+
+    private void checkHostStarted() {
+        if (!impl.IsHostStarted()) {
+            throw new IllegalStateException("ホストが見つかりませんでした");
+        }
     }
 
     /**

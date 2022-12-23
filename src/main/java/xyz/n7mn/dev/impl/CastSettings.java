@@ -61,7 +61,7 @@ public class CastSettings {
     }
 
     public void speak(String text) {
-        //TODO:
+        cevio.speak(structure, text);
     }
 
     public void saveToFile(String text, String path) {

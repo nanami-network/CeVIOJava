@@ -12,14 +12,16 @@ public interface CeVIOImpl extends Library {
     int StartHost(boolean noWait);
 
     //
-    //double GetTextDuration(String text);
+    //double GetTextDuration(Stirnng text);
+
+    void Speak(CastSettingsImpl settings, byte[] text);
 
     boolean CloseHost(int value);
 
     boolean OutputWaveToFile(CastSettingsImpl settings, byte[] text, byte[] path);
 
-    void setTalker(CastSettingsImpl settings);
-    void getTalker(byte[] cast, CastSettingsImpl settings);
+    void SetTalker(CastSettingsImpl settings);
+    void GetTalker(byte[] cast, CastSettingsImpl settings);
     //void Speak(byte[] text);
 
     //void getTalker(byte[] cast, byte[] pointer, Pointer array);
