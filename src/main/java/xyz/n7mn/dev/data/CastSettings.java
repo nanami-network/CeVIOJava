@@ -60,8 +60,13 @@ public class CastSettings {
         return this;
     }
 
+    public TalkerComponentCollection getComponents() {
+        sync();
+        return cevio.getTalkerComponents(this);
+    }
+
     public void speak(String text, boolean wait) {
-        cevio.speak(structure, text, wait);
+        cevio.speak(this, text, wait);
     }
 
     public void speak(String text) {
@@ -69,15 +74,15 @@ public class CastSettings {
     }
 
     public void saveToFile(String text, String path) {
-        cevio.save(structure, text, path);
+        cevio.save(this, text, path);
     }
 
     public void sync() {
-        this.structure = cevio.getCastSettingsImpl(structure.cast);
+        this.structure = cevio.getCastSettingsStructure(structure.cast);
     }
 
     public void write() {
-        cevio.write(structure);
+        cevio.setCastSettings(this);
     }
 
     public CastSettingsStructure getStructure() {

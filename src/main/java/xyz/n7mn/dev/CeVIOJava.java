@@ -28,7 +28,7 @@ public class CeVIOJava {
                 System.out.println(v);
                 CastSettings structure = getCastSettings(v);
                 structure.setVolume(100);
-                write(structure.getStructure());
+                setCastSettings(structure);
             });
 
             getAvailableCastsList().forEach(v -> {
@@ -80,29 +80,28 @@ public class CeVIOJava {
         return HostStartResult.getByOriginal(impl.StartHost(noWait));
     }
 
-
-    public void speak(CastSettingsStructure castSettingsStructure, String text, boolean wait) {
+    public void speak(CastSettings castSettings, String text, boolean wait) {
         checkHostStarted();
-        impl.Speak(castSettingsStructure, Native.toByteArray(text, "Shift-JIS"), wait);
+        impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), wait);
     }
 
     /**
-     * @param castSettingsStructure ストラクチャー
+     * @param castSettings キャストインスタンス
      * @param text 言わせたい文字
      * @param path 保存先 (最後に .wavをつけてください！)
      * @return 結果
      */
-    public boolean save(CastSettingsStructure castSettingsStructure, String text, String path) {
+    public boolean save(CastSettings castSettings, String text, String path) {
         checkHostStarted();
-        return impl.OutputWaveToFile(castSettingsStructure, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
+        return impl.OutputWaveToFile(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
     }
 
     /**
-     * @param structure APIサイドと同期します
+     * @param settings APIサイドと同期します
      */
-    public void write(CastSettingsStructure structure) {
+    public void setCastSettings(CastSettings settings) {
         checkHostStarted();
-        impl.SetTalker(structure);
+        impl.SetTalker(settings.getStructure());
     }
 
     /**
@@ -110,14 +109,14 @@ public class CeVIOJava {
      * @return キャストの設定情報
      */
     public CastSettings getCastSettings(String cast) {
-        return new CastSettings(this, getCastSettingsImpl(cast));
+        return new CastSettings(this, getCastSettingsStructure(cast));
     }
 
     /**
      * @param cast キャスト名
      * @return キャストの情報
      */
-    public CastSettingsStructure getCastSettingsImpl(String cast) {
+    public CastSettingsStructure getCastSettingsStructure(String cast) {
         checkHostStarted();
         CastSettingsStructure data = new CastSettingsStructure();
         impl.GetTalker(Native.toByteArray(cast, "Shift-JIS"), data);
@@ -189,6 +188,7 @@ public class CeVIOJava {
         impl.SetComponent(settings.getStructure(), component.getStructure());
     }
 
+    @Deprecated
     public void setTalkerComponentStructure(CastSettings settings, TalkerComponentStructure component) {
         checkHostStarted();
         impl.SetComponent(settings.getStructure(), component);
