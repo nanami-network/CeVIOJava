@@ -72,9 +72,9 @@ public class CeVIOJava {
     }
 
 
-    public void speak(CastSettingsImpl castSettingsImpl, String text) {
+    public void speak(CastSettingsImpl castSettingsImpl, String text, boolean wait) {
         checkHostStarted();
-        impl.Speak(castSettingsImpl, Native.toByteArray(text, "Shift-JIS"));
+        impl.Speak(castSettingsImpl, Native.toByteArray(text, "Shift-JIS"), wait);
     }
 
     /**
@@ -145,9 +145,7 @@ public class CeVIOJava {
      * @return 利用可能なキャスト
      */
     public StringArrayStructure[] getAvailableCastsStructure() {
-        if (!impl.IsHostStarted()) {
-            throw new IllegalStateException("ホストが見つかりませんでした");
-        }
+        checkHostStarted();
         PointerByReference ref = new PointerByReference();
         final int length = impl.AvailableCasts(ref);
         StringArrayStructure.ByReference byReference = new StringArrayStructure.ByReference(ref.getValue());

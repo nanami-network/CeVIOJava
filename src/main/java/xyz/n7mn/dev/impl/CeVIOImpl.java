@@ -8,13 +8,9 @@ public interface CeVIOImpl extends Library {
     String HostVersion();
 
     boolean IsHostStarted();
-
     int StartHost(boolean noWait);
 
-    //
-    //double GetTextDuration(Stirnng text);
-
-    void Speak(CastSettingsImpl settings, byte[] text);
+    void Speak(CastSettingsImpl settings, byte[] text, boolean wait);
 
     boolean CloseHost(int value);
 
@@ -22,13 +18,6 @@ public interface CeVIOImpl extends Library {
 
     void SetTalker(CastSettingsImpl settings);
     void GetTalker(byte[] cast, CastSettingsImpl settings);
-    //void Speak(byte[] text);
-
-    //void getTalker(byte[] cast, byte[] pointer, Pointer array);
-
-    //WString test(WString test);
-
-   // int getVolume();
 
     int AvailableCasts(PointerByReference reference);
 }

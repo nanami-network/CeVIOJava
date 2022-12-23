@@ -60,8 +60,12 @@ public class CastSettings {
         return this;
     }
 
+    public void speak(String text, boolean wait) {
+        cevio.speak(structure, text, wait);
+    }
+
     public void speak(String text) {
-        cevio.speak(structure, text);
+        speak(text, true);
     }
 
     public void saveToFile(String text, String path) {
