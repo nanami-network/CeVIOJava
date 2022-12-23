@@ -1,13 +1,13 @@
-package xyz.n7mn.dev.impl;
+package xyz.n7mn.dev.data;
 
 import xyz.n7mn.dev.CeVIOJava;
-import xyz.n7mn.dev.structure.CastSettingsImpl;
+import xyz.n7mn.dev.structure.CastSettingsStructure;
 
 public class CastSettings {
     private final CeVIOJava cevio;
-    private CastSettingsImpl structure;
+    private CastSettingsStructure structure;
 
-    public CastSettings(CeVIOJava cevio, CastSettingsImpl structure) {
+    public CastSettings(CeVIOJava cevio, CastSettingsStructure structure) {
         this.cevio = cevio;
         this.structure = structure;
     }
@@ -80,7 +80,7 @@ public class CastSettings {
         cevio.write(structure);
     }
 
-    public CastSettingsImpl getStructure() {
+    public CastSettingsStructure getStructure() {
         return structure;
     }
 

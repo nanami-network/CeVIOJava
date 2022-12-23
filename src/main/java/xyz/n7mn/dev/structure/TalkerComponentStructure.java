@@ -4,18 +4,18 @@ import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 @Structure.FieldOrder({"id", "name", "value"})
-public class TalkerComponent extends Structure {
+public class TalkerComponentStructure extends Structure {
     public String id;
     public String name;
     public int value;
 
-    public TalkerComponent(Pointer pointer) {
+    public TalkerComponentStructure(Pointer pointer) {
         super(pointer);
         setStringEncoding("Shift-JIS");
         read();
     }
 
-    public static class ByReference extends TalkerComponent implements Structure.ByReference {
+    public static class ByReference extends TalkerComponentStructure implements Structure.ByReference {
         public ByReference(Pointer pointer) {
             super(pointer);
         }

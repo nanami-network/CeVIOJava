@@ -2,7 +2,8 @@ package xyz.n7mn.dev.impl;
 
 import com.sun.jna.*;
 import com.sun.jna.ptr.PointerByReference;
-import xyz.n7mn.dev.structure.CastSettingsImpl;
+import xyz.n7mn.dev.structure.CastSettingsStructure;
+import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
 public interface CeVIOImpl extends Library {
     String HostVersion();
@@ -10,15 +11,16 @@ public interface CeVIOImpl extends Library {
     boolean IsHostStarted();
     int StartHost(boolean noWait);
 
-    void Speak(CastSettingsImpl settings, byte[] text, boolean wait);
+    void Speak(CastSettingsStructure settings, byte[] text, boolean wait);
 
     boolean CloseHost(int value);
 
-    boolean OutputWaveToFile(CastSettingsImpl settings, byte[] text, byte[] path);
+    boolean OutputWaveToFile(CastSettingsStructure settings, byte[] text, byte[] path);
 
-    void SetTalker(CastSettingsImpl settings);
-    void GetTalker(byte[] cast, CastSettingsImpl settings);
+    void SetTalker(CastSettingsStructure settings);
+    void GetTalker(byte[] cast, CastSettingsStructure settings);
 
-    int GetComponents(CastSettingsImpl settings, PointerByReference reference);
+    int GetComponents(CastSettingsStructure settings, PointerByReference reference);
+    void SetComponent(CastSettingsStructure settings, TalkerComponentStructure component);
     int AvailableCasts(PointerByReference reference);
 }

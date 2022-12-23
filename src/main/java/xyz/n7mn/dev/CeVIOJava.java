@@ -2,11 +2,12 @@ package xyz.n7mn.dev;
 
 import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
-import xyz.n7mn.dev.impl.CastSettings;
+import xyz.n7mn.dev.data.CastSettings;
+import xyz.n7mn.dev.data.TalkerComponent;
 import xyz.n7mn.dev.impl.CeVIOImpl;
 import xyz.n7mn.dev.structure.StringArrayStructure;
-import xyz.n7mn.dev.structure.CastSettingsImpl;
-import xyz.n7mn.dev.structure.TalkerComponent;
+import xyz.n7mn.dev.structure.CastSettingsStructure;
+import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,8 @@ public class CeVIOJava {
                 System.out.println(structure);
                 structure.speak("あいうえお！");
                 structure.saveToFile("あいうえお！！", "C:\\Users\\rin11\\Documents\\GitHub\\GachaPlugin\\CeVIOJavaGitHub\\Cpa" + structure.getCast() +  ".wav");
-                TalkerComponent[] component = getCastComponent(structure.getStructure());
-                for (TalkerComponent component1 : component) {
+                TalkerComponentStructure[] component = getCastComponents(structure.getStructure());
+                for (TalkerComponentStructure component1 : component) {
                     System.out.println(component1.id);
                     System.out.println(component1.name);
                     System.out.println(component1.value);
@@ -79,26 +80,26 @@ public class CeVIOJava {
     }
 
 
-    public void speak(CastSettingsImpl castSettingsImpl, String text, boolean wait) {
+    public void speak(CastSettingsStructure castSettingsStructure, String text, boolean wait) {
         checkHostStarted();
-        impl.Speak(castSettingsImpl, Native.toByteArray(text, "Shift-JIS"), wait);
+        impl.Speak(castSettingsStructure, Native.toByteArray(text, "Shift-JIS"), wait);
     }
 
     /**
-     * @param castSettingsImpl ストラクチャー
+     * @param castSettingsStructure ストラクチャー
      * @param text 言わせたい文字
      * @param path 保存先 (最後に .wavをつけてください！)
      * @return 結果
      */
-    public boolean save(CastSettingsImpl castSettingsImpl, String text, String path) {
+    public boolean save(CastSettingsStructure castSettingsStructure, String text, String path) {
         checkHostStarted();
-        return impl.OutputWaveToFile(castSettingsImpl, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
+        return impl.OutputWaveToFile(castSettingsStructure, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
     }
 
     /**
      * @param structure APIサイドと同期します
      */
-    public void write(CastSettingsImpl structure) {
+    public void write(CastSettingsStructure structure) {
         checkHostStarted();
         impl.SetTalker(structure);
     }
@@ -115,23 +116,11 @@ public class CeVIOJava {
      * @param cast キャスト名
      * @return キャストの情報
      */
-    public CastSettingsImpl getCastSettingsImpl(String cast) {
+    public CastSettingsStructure getCastSettingsImpl(String cast) {
         checkHostStarted();
-        CastSettingsImpl data = new CastSettingsImpl();
+        CastSettingsStructure data = new CastSettingsStructure();
         impl.GetTalker(Native.toByteArray(cast, "Shift-JIS"), data);
         return data;
-    }
-
-    /**
-     * @param settings キャストデータ
-     * @return タルカーコンポーネント
-     */
-    public TalkerComponent[] getCastComponent(CastSettingsImpl settings) {
-        checkHostStarted();
-        PointerByReference ref = new PointerByReference();
-        final int length = impl.GetComponents(settings, ref);
-        TalkerComponent.ByReference byReference = new TalkerComponent.ByReference(ref.getValue());
-        return (TalkerComponent.ByReference[]) byReference.toArray(length);
     }
 
     /**
@@ -169,6 +158,23 @@ public class CeVIOJava {
         final int length = impl.AvailableCasts(ref);
         StringArrayStructure.ByReference byReference = new StringArrayStructure.ByReference(ref.getValue());
         return (StringArrayStructure.ByReference[]) byReference.toArray(length);
+    }
+
+    /**
+     * @param settings キャストデータ
+     * @return タルカーコンポーネント
+     */
+    public TalkerComponentStructure[] getCastComponents(CastSettingsStructure settings) {
+        checkHostStarted();
+        PointerByReference ref = new PointerByReference();
+        final int length = impl.GetComponents(settings, ref);
+        TalkerComponentStructure.ByReference byReference = new TalkerComponentStructure.ByReference(ref.getValue());
+        return (TalkerComponentStructure.ByReference[]) byReference.toArray(length);
+    }
+
+    public void setCastComponent(CastSettingsStructure settings, TalkerComponentStructure component) {
+        checkHostStarted();
+        impl.SetComponent(settings, component);
     }
 
     /**

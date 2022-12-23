@@ -4,20 +4,20 @@ import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 @Structure.FieldOrder({"cast", "speed", "volume", "alpha", "toneScale"})
-public class CastSettingsImpl extends Structure {
+public class CastSettingsStructure extends Structure {
     public String cast;
     public int speed;
     public int volume;
     public int alpha;
     public int toneScale;
 
-    public CastSettingsImpl(Pointer pointer) {
+    public CastSettingsStructure(Pointer pointer) {
         super(pointer);
         setStringEncoding("Shift-JIS");
         read();
     }
 
-    public CastSettingsImpl() {
+    public CastSettingsStructure() {
         super();
         setStringEncoding("Shift-JIS");
     }
