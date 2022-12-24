@@ -177,12 +177,6 @@ public class CeVIOJava {
         impl.CloseHost(0);
     }
 
-    private void checkHostStarted() {
-        if (!impl.IsHostStarted()) {
-            throw new IllegalStateException("ホストが見つかりませんでした");
-        }
-    }
-
     /**
      * 【CeVIO AI】に終了を要求します。
      * @param mode
@@ -190,6 +184,12 @@ public class CeVIOJava {
      */
     public void stop(HostCloseMode mode) {
         impl.CloseHost(mode.ordinal());
+    }
+
+    private void checkHostStarted() {
+        if (!impl.IsHostStarted()) {
+            throw new IllegalStateException("ホストが見つかりませんでした");
+        }
     }
 
     public CeVIOImpl getImpl() {
