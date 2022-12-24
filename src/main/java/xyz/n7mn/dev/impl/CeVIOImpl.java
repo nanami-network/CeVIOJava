@@ -13,6 +13,7 @@ public interface CeVIOImpl extends Library {
     int StartHost(boolean noWait);
 
     void Speak(CastSettingsStructure settings, byte[] text, boolean wait);
+    double GetTextDuration(CastSettingsStructure settings, byte[] text);
 
     boolean CloseHost(int value);
 

@@ -73,6 +73,15 @@ public class CastSettings {
         speak(text, true);
     }
 
+    /**
+     * 指定したセリフの長さを取得します。
+     * @param text セリフ
+     * @return 長さ (秒)
+     */
+    public double getTextDuration(String text) {
+        return cevio.getTextDuration(this, text);
+    }
+
     public boolean saveToFile(String text, String path) {
         return cevio.save(this, text, path);
     }

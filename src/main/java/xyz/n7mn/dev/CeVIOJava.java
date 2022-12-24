@@ -56,6 +56,11 @@ public class CeVIOJava {
         impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), wait);
     }
 
+
+    public double getTextDuration(CastSettings settings, String text) {
+        return impl.GetTextDuration(settings.getStructure(), Native.toByteArray(text, "Shift-JIS"));
+    }
+
     /**
      * @param castSettings キャストインスタンス
      * @param text 言わせたい文字
