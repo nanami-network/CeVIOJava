@@ -1,5 +1,5 @@
 # CeVIOJava
-**現時点ではCeVIO Creative Studioのサポートのみとなります。**
+**現時点ではCeVIO Creative Studioのみのサポートとなります。**
 
 ## 仕組み
 [CeVIO API](https://cevio.jp/guide/cevio_cs7/interface/dotnet/) を使用してこのプロジェクトにある [CeVIOJava.dll](src/main/resources/CeVIOJava.dll) から [Java Native Access](https://github.com/java-native-access/jna/) を使って呼び出します
