@@ -20,7 +20,7 @@ public class TalkerComponentCollection {
         return components.get(id);
     }
 
-    public Map<String, TalkerComponent> getAsList() {
+    public Map<String, TalkerComponent> getAsMap() {
         return components;
     }
 
