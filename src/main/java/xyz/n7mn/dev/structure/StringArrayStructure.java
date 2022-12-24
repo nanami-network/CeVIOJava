@@ -5,6 +5,8 @@ import com.sun.jna.Structure;
 
 @Structure.FieldOrder({"name"})
 public class StringArrayStructure extends Structure {
+    public String name;
+
     public StringArrayStructure(Pointer pointer) {
         super(pointer);
         setStringEncoding("Shift-JIS");
@@ -16,5 +18,4 @@ public class StringArrayStructure extends Structure {
             super(pointer);
         }
     }
-    public String name;
 }

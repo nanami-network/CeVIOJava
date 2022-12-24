@@ -2,6 +2,7 @@ package xyz.n7mn.dev.impl;
 
 import com.sun.jna.*;
 import com.sun.jna.ptr.PointerByReference;
+import xyz.n7mn.dev.data.CastSettings;
 import xyz.n7mn.dev.data.TalkerComponent;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
@@ -25,6 +26,8 @@ public interface CeVIOImpl extends Library {
     int GetComponents(CastSettingsStructure settings, PointerByReference reference);
     void GetComponent(CastSettingsStructure settings, byte[] name, TalkerComponentStructure component);
     void SetComponent(CastSettingsStructure settings, TalkerComponentStructure component);
+
+    int GetPhonemes(CastSettingsStructure settings, byte[] text, PointerByReference reference);
 
     int AvailableCasts(PointerByReference reference);
 }

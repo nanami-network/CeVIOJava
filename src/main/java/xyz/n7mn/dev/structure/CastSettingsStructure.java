@@ -32,8 +32,4 @@ public class CastSettingsStructure extends Structure {
                 ", toneScale=" + toneScale +
                 '}';
     }
-
-    /*private int Tone;
-    private int ToneScale;
-    private int Alpha;*/
 }

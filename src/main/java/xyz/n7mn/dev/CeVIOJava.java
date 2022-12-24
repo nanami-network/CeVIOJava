@@ -6,6 +6,7 @@ import xyz.n7mn.dev.data.*;
 import xyz.n7mn.dev.data.enums.HostCloseMode;
 import xyz.n7mn.dev.data.enums.HostStartResult;
 import xyz.n7mn.dev.impl.CeVIOImpl;
+import xyz.n7mn.dev.structure.PhonemeDataStructure;
 import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
@@ -51,33 +52,40 @@ public class CeVIOJava {
         return HostStartResult.getByOriginal(impl.StartHost(noWait));
     }
 
+    /**
+     * CeVIOに喋ってもらいます
+     * <br>通常は {@link CastSettings#speak(String)} から使用してください
+     * @param castSettings インスタンス
+     * @param text　セリフ
+     * @param wait 終わるまで待たせるか（通常は true)
+     */
     public void speak(CastSettings castSettings, String text, boolean wait) {
         checkHostStarted();
         impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), wait);
     }
 
 
-    public double getTextDuration(CastSettings settings, String text) {
-        return impl.GetTextDuration(settings.getStructure(), Native.toByteArray(text, "Shift-JIS"));
+    /**
+     * 指定したセリフの長さを取得します。
+     * <br>通常は {@link CastSettings#getTextDuration(String)} から使用してください
+     * @param castSettings インスタンス
+     * @param text　セリフ
+     * @return 長さ (秒)
+     */
+    public double getTextDuration(CastSettings castSettings, String text) {
+        return impl.GetTextDuration(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"));
     }
 
     /**
+     *
      * @param castSettings キャストインスタンス
-     * @param text 言わせたい文字
+     * @param text セリフ
      * @param path 保存先 (最後に .wavをつけてください！)
      * @return 結果
      */
     public boolean save(CastSettings castSettings, String text, String path) {
         checkHostStarted();
         return impl.OutputWaveToFile(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
-    }
-
-    /**
-     * @param settings APIサイドと同期します
-     */
-    public void setCastSettings(CastSettings settings) {
-        checkHostStarted();
-        impl.SetTalker(settings.getStructure());
     }
 
     /**
@@ -89,6 +97,15 @@ public class CeVIOJava {
     }
 
     /**
+     * APIサイドに {@link CastSettings} を書き込みます
+     * @param settings インスタンス
+     */
+    public void setCastSettings(CastSettings settings) {
+        checkHostStarted();
+        impl.SetTalker(settings.getStructure());
+    }
+
+    /**
      * @param cast キャスト名
      * @return キャストの情報
      */
@@ -97,6 +114,13 @@ public class CeVIOJava {
         CastSettingsStructure data = new CastSettingsStructure();
         impl.GetTalker(Native.toByteArray(cast, "Shift-JIS"), data);
         return data;
+    }
+
+    public PhonemeDataStructure[] getPhonemes(CastSettings settings, String text) {
+        PointerByReference ref = new PointerByReference();
+        final int length = impl.GetPhonemes(settings.getStructure(), Native.toByteArray(text, "Shift-JIS"), ref);
+        PhonemeDataStructure.ByReference byReference = new PhonemeDataStructure.ByReference(ref.getValue());
+        return (PhonemeDataStructure[]) byReference.toArray(length);
     }
 
     /**
@@ -133,7 +157,7 @@ public class CeVIOJava {
         PointerByReference ref = new PointerByReference();
         final int length = impl.AvailableCasts(ref);
         StringArrayStructure.ByReference byReference = new StringArrayStructure.ByReference(ref.getValue());
-        return (StringArrayStructure.ByReference[]) byReference.toArray(length);
+        return (StringArrayStructure[]) byReference.toArray(length);
     }
 
     /**

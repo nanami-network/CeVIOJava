@@ -2,6 +2,7 @@ package xyz.n7mn.dev.data;
 
 import xyz.n7mn.dev.CeVIOJava;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
+import xyz.n7mn.dev.structure.PhonemeDataStructure;
 
 public class CastSettings {
     private final CeVIOJava cevio;
@@ -80,6 +81,10 @@ public class CastSettings {
      */
     public double getTextDuration(String text) {
         return cevio.getTextDuration(this, text);
+    }
+
+    public PhonemeDataStructure[] getPhonemes(String text) {
+        return cevio.getPhonemes(this, text);
     }
 
     public boolean saveToFile(String text, String path) {
