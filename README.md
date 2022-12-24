@@ -34,3 +34,14 @@
     }
     cevio.stop();
 ```
+#### 出力:
+```
+name=普通 id=A-02 value=0 newValue=70
+name=怒り id=A-03 value=0 newValue=31
+name=哀しみ id=A-04 value=0 newValue=94
+name=元気 id=A-01 value=100 newValue=38
+[Log] name=普通 id=A-02 value=70
+[Log] name=怒り id=A-03 value=31
+[Log] name=哀しみ id=A-04 value=94
+[Log] name=元気 id=A-01 value=38
+```
