@@ -1,6 +1,7 @@
 package xyz.n7mn.dev;
 
-import com.sun.jna.Native;
+import com.sun.jna.*;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import xyz.n7mn.dev.data.*;
 import xyz.n7mn.dev.data.enums.HostCloseMode;
@@ -11,18 +12,22 @@ import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class CeVIOJava {
     private final CeVIOImpl impl;
+    private final boolean checkHost;
 
     public CeVIOJava(CeVIOImpl impl, CeVIOBuilder builder) {
         this.impl = impl;
         if (builder.isAutoStart() && !isHostStarted()) {
             start(false);
         }
+        this.checkHost = builder.isCheckHost();
     }
 
     /**
@@ -61,7 +66,25 @@ public class CeVIOJava {
      */
     public void speak(CastSettings castSettings, String text, boolean wait) {
         checkHostStarted();
-        impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), wait);
+
+        //Pointer pointer = new Pointer(512);
+        Pointer pointer1 = impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), wait);
+        //System.out.println("v:" + reference.getValue());
+
+        System.out.println("test:" + pointer1.getInt(0));
+        System.out.println("test:" + pointer1.getInt(1));
+        System.out.println("test:" + pointer1.getInt(2));
+        System.out.println("test:" + pointer1.getInt(3));
+        System.out.println("test:" + pointer1.getInt(4));
+        System.out.println("test:" + pointer1.getInt(5));
+        System.out.println("test:" + pointer1.getInt(6));
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(impl.IsSpeakingCompleted(pointer1));
+        System.out.printf("defined");
     }
 
 
@@ -127,26 +150,17 @@ public class CeVIOJava {
      * @return 利用可能なキャスト
      */
     public List<String> getAvailableCastsList() {
-        StringArrayStructure[] structure = getAvailableCastsStructure();
-
-        List<String> casts = new ArrayList<>(structure.length);
-        for (StringArrayStructure struct : structure) {
-            casts.add(struct.name);
-        }
-        return casts;
+        return Arrays.asList(getAvailableCasts());
     }
 
     /**
      * @return 利用可能なキャスト
      */
     public String[] getAvailableCasts() {
-        StringArrayStructure[] structure = getAvailableCastsStructure();
-
-        String[] casts = new String[structure.length];
-        for (int i = 0; i < structure.length; i++) {
-            casts[i] = structure[i].name;
-        }
-        return casts;
+        checkHostStarted();
+        PointerByReference ref = new PointerByReference();
+        final int length = impl.AvailableCasts(ref);
+        return ref.getValue().getStringArray(0, length, "Shift-JIS");
     }
 
     /**
@@ -206,12 +220,12 @@ public class CeVIOJava {
      * @param mode
      * <br> - {@link HostCloseMode#DEFAULT} は安全に終了できます。
      */
-    public void stop(HostCloseMode mode) {
-        impl.CloseHost(mode.ordinal());
+    public boolean stop(HostCloseMode mode) {
+        return impl.CloseHost(mode.ordinal());
     }
 
     private void checkHostStarted() {
-        if (!impl.IsHostStarted()) {
+        if (checkHost && !impl.IsHostStarted()) {
             throw new IllegalStateException("ホストが見つかりませんでした");
         }
     }

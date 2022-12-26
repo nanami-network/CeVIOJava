@@ -3,11 +3,12 @@ package xyz.n7mn.dev.structure;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
-@Structure.FieldOrder({"cast", "speed", "volume", "alpha", "toneScale"})
+@Structure.FieldOrder({"cast", "volume", "speed", "tone" ,"alpha", "toneScale"})
 public class CastSettingsStructure extends Structure {
     public String cast;
-    public int speed;
     public int volume;
+    public int speed;
+    public int tone;
     public int alpha;
     public int toneScale;
 
@@ -24,10 +25,11 @@ public class CastSettingsStructure extends Structure {
 
     @Override
     public String toString() {
-        return "TalkDataStructure{" +
+        return "CastSettingsStructure{" +
                 "cast='" + cast + '\'' +
-                ", speed=" + speed +
                 ", volume=" + volume +
+                ", speed=" + speed +
+                ", tone=" + tone +
                 ", alpha=" + alpha +
                 ", toneScale=" + toneScale +
                 '}';

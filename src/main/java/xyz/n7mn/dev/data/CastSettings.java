@@ -17,19 +17,12 @@ public class CastSettings {
         return structure.cast;
     }
 
-    public int getSpeed() {
-        sync();
-        return structure.speed;
-    }
-
-    public CastSettings setSpeed(int speed) {
-        structure.speed = speed;
-        write();
-        return this;
-    }
-
     public int getVolume() {
         sync();
+        return structure.volume;
+    }
+
+    public int getCacheVolume() {
         return structure.volume;
     }
 
@@ -39,8 +32,42 @@ public class CastSettings {
         return this;
     }
 
+    public int getSpeed() {
+        sync();
+        return structure.speed;
+    }
+
+    public int getCacheSpeed() {
+        return structure.speed;
+    }
+
+    public CastSettings setSpeed(int speed) {
+        structure.speed = speed;
+        write();
+        return this;
+    }
+
+    public int getTone() {
+        sync();
+        return structure.tone;
+    }
+
+    public int getCacheTone() {
+        return structure.tone;
+    }
+
+    public CastSettings setTone(int tone) {
+        structure.tone = tone;
+        write();
+        return this;
+    }
+
     public int getAlpha() {
         sync();
+        return structure.alpha;
+    }
+
+    public int getCacheAlpha() {
         return structure.alpha;
     }
 
@@ -55,8 +82,22 @@ public class CastSettings {
         return structure.toneScale;
     }
 
+    public int getCacheToneScale() {
+        return structure.toneScale;
+    }
+
     public CastSettings setToneScale(int toneScale) {
         structure.alpha = toneScale;
+        write();
+        return this;
+    }
+
+    public CastSettings setOnce(int volume, int speed, int tone, int alpha, int toneScale) {
+        structure.volume = volume;
+        structure.speed = speed;
+        structure.tone = tone;
+        structure.alpha = alpha;
+        structure.toneScale = toneScale;
         write();
         return this;
     }

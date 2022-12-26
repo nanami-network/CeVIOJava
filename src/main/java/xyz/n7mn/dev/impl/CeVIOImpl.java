@@ -1,6 +1,7 @@
 package xyz.n7mn.dev.impl;
 
 import com.sun.jna.*;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import xyz.n7mn.dev.data.CastSettings;
 import xyz.n7mn.dev.data.TalkerComponent;
@@ -13,7 +14,14 @@ public interface CeVIOImpl extends Library {
     boolean IsHostStarted();
     int StartHost(boolean noWait);
 
-    void Speak(CastSettingsStructure settings, byte[] text, boolean wait);
+    /* CeVIO SpeakingState */
+    Pointer Speak(CastSettingsStructure settings, byte[] text, boolean wait);
+    void Speak(CastSettingsStructure settings, byte[] text, boolean wait, Pointer pointer);
+    void Wait(Pointer pointer, double timeout);
+    void Wait(Pointer pointer);
+    boolean IsSpeakingSucceeded(Pointer pointer);
+    boolean IsSpeakingCompleted(Pointer pointer);
+
     double GetTextDuration(CastSettingsStructure settings, byte[] text);
 
     boolean CloseHost(int value);
@@ -29,5 +37,5 @@ public interface CeVIOImpl extends Library {
 
     int GetPhonemes(CastSettingsStructure settings, byte[] text, PointerByReference reference);
 
-    int AvailableCasts(PointerByReference reference);
+    int AvailableCasts(PointerByReference strings);
 }
