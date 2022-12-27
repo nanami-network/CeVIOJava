@@ -2,6 +2,7 @@ package xyz.n7mn.dev;
 
 import com.sun.jna.Native;
 import xyz.n7mn.dev.data.CastSettings;
+import xyz.n7mn.dev.data.SpeakingState;
 import xyz.n7mn.dev.data.TalkerComponent;
 import xyz.n7mn.dev.data.enums.PlatformType;
 import xyz.n7mn.dev.impl.CeVIOImpl;
@@ -23,9 +24,9 @@ public class CeVIOBuilder {
         cevio.start(false);
 
         long start = System.currentTimeMillis();
-        Arrays.stream(cevio.getAvailableCastsStructure()).forEach(v -> {
+        /*Arrays.stream(cevio.getAvailableCastsStructure()).forEach(v -> {
             System.out.println(v.name);
-        });
+        });*/
 
         List<String> availableCasts = cevio.getAvailableCastsList();
         if (availableCasts.isEmpty()) {
@@ -47,7 +48,9 @@ public class CeVIOBuilder {
             //}
             System.out.printf("lag:" + (System.currentTimeMillis() - start));
 
-            settings.speak("こんにちは！" + settings.getCast() + "です！", true);
+            SpeakingState state = settings.speak("こんにちは！" + settings.getCast() + "です！");
+            state.wait(0d);
+
             //[Log] name=Dark id=CTNV-JPF-FP4-04 value=10
             //[Log] name=Normal id=CTNV-JPF-FP4-02 value=2
             //[Log] name=Bright id=CTNV-JPF-FP4-01 value=93

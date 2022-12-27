@@ -6,7 +6,10 @@ import com.sun.jna.ptr.PointerByReference;
 import xyz.n7mn.dev.data.CastSettings;
 import xyz.n7mn.dev.data.TalkerComponent;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
+import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
+
+import java.awt.*;
 
 public interface CeVIOImpl extends Library {
     String HostVersion();
@@ -37,5 +40,5 @@ public interface CeVIOImpl extends Library {
 
     int GetPhonemes(CastSettingsStructure settings, byte[] text, PointerByReference reference);
 
-    int AvailableCasts(PointerByReference strings);
+    int AvailableCasts(PointerByReference reference);
 }

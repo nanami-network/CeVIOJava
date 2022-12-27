@@ -107,12 +107,12 @@ public class CastSettings {
         return cevio.getTalkerComponents(this);
     }
 
-    public void speak(String text, boolean wait) {
-        cevio.speak(this, text, wait);
+    public SpeakingState speak(String text, boolean wait) {
+        return cevio.speak(this, text, wait);
     }
 
-    public void speak(String text) {
-        speak(text, true);
+    public SpeakingState speak(String text) {
+        return speak(text, true);
     }
 
     /**

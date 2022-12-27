@@ -1,7 +1,6 @@
 package xyz.n7mn.dev;
 
 import com.sun.jna.*;
-import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import xyz.n7mn.dev.data.*;
 import xyz.n7mn.dev.data.enums.HostCloseMode;
@@ -12,11 +11,8 @@ import xyz.n7mn.dev.structure.StringArrayStructure;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
 import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class CeVIOJava {
     private final CeVIOImpl impl;
@@ -64,29 +60,15 @@ public class CeVIOJava {
      * @param text　セリフ
      * @param wait 終わるまで待たせるか（通常は true)
      */
-    public void speak(CastSettings castSettings, String text, boolean wait) {
+    public SpeakingState speak(CastSettings castSettings, String text, boolean wait) {
         checkHostStarted();
 
-        //Pointer pointer = new Pointer(512);
-        Pointer pointer1 = impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), wait);
-        //System.out.println("v:" + reference.getValue());
-
-        System.out.println("test:" + pointer1.getInt(0));
-        System.out.println("test:" + pointer1.getInt(1));
-        System.out.println("test:" + pointer1.getInt(2));
-        System.out.println("test:" + pointer1.getInt(3));
-        System.out.println("test:" + pointer1.getInt(4));
-        System.out.println("test:" + pointer1.getInt(5));
-        System.out.println("test:" + pointer1.getInt(6));
-        try {
-            Thread.sleep(10000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        SpeakingState state = new SpeakingState(this, impl.Speak(castSettings.getStructure(), Native.toByteArray(text, "Shift-JIS"), true));
+        if (wait) {
+            state.wait(0d);
         }
-        System.out.println(impl.IsSpeakingCompleted(pointer1));
-        System.out.printf("defined");
+        return state;
     }
-
 
     /**
      * 指定したセリフの長さを取得します。
@@ -156,16 +138,18 @@ public class CeVIOJava {
     /**
      * @return 利用可能なキャスト
      */
+    //よくわからないが、 StringArrayStructureにしないと 文字が３文字しか受け取れない？？？？
     public String[] getAvailableCasts() {
         checkHostStarted();
         PointerByReference ref = new PointerByReference();
-        final int length = impl.AvailableCasts(ref);
+        int length = impl.AvailableCasts(ref);
         return ref.getValue().getStringArray(0, length, "Shift-JIS");
     }
 
     /**
      * @return 利用可能なキャスト
      */
+    @Deprecated
     public StringArrayStructure[] getAvailableCastsStructure() {
         checkHostStarted();
         PointerByReference ref = new PointerByReference();

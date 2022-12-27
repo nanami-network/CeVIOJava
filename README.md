@@ -61,4 +61,4 @@ name=元気 id=A-01 value=100 newValue=38
 - [x] TalkerComponent
 - [x] PhonemeData
 - [x] ServiceControl (HostStartResult, HostCloseMode)
-- [ ] SpeakingState (Javaだと実装厳しいかも！)
+- [x] SpeakingState
