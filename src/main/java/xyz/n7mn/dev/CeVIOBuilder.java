@@ -6,10 +6,9 @@ import xyz.n7mn.dev.data.SpeakingState;
 import xyz.n7mn.dev.data.TalkerComponent;
 import xyz.n7mn.dev.data.enums.PlatformType;
 import xyz.n7mn.dev.impl.CeVIOImpl;
-import xyz.n7mn.dev.structure.PhonemeDataStructure;
+import xyz.n7mn.dev.structure.CastSettingsStructure;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,6 +23,8 @@ public class CeVIOBuilder {
         cevio.start(false);
 
         long start = System.currentTimeMillis();
+        //CastSettingsStructure pointer = cevio.getCastSettingsStructure(cevio.getAvailableCastsList().get(0));
+
         /*Arrays.stream(cevio.getAvailableCastsStructure()).forEach(v -> {
             System.out.println(v.name);
         });*/
@@ -48,8 +49,7 @@ public class CeVIOBuilder {
             //}
             System.out.printf("lag:" + (System.currentTimeMillis() - start));
 
-            SpeakingState state = settings.speak("こんにちは！" + settings.getCast() + "です！");
-            state.wait(0d);
+            SpeakingState state = settings.speak("こんにちは！" + settings.getCast() + "です！", true);
 
             //[Log] name=Dark id=CTNV-JPF-FP4-04 value=10
             //[Log] name=Normal id=CTNV-JPF-FP4-02 value=2
@@ -67,7 +67,7 @@ public class CeVIOBuilder {
             //[Log] name=Strong id=CTNV-JPF-FP4-03 value=19
 
         }
-        //cevio.stop();
+        //cevio.stop();*/
     }
 
     private boolean autoStart, checkHost;

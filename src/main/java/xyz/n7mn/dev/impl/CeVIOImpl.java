@@ -32,7 +32,7 @@ public interface CeVIOImpl extends Library {
     boolean OutputWaveToFile(CastSettingsStructure settings, byte[] text, byte[] path);
 
     void SetTalker(CastSettingsStructure settings);
-    void GetTalker(byte[] cast, CastSettingsStructure settings);
+    void GetTalker(byte[] cast, CastSettingsStructure structure);
 
     int GetComponents(CastSettingsStructure settings, PointerByReference reference);
     void GetComponent(CastSettingsStructure settings, byte[] name, TalkerComponentStructure component);
