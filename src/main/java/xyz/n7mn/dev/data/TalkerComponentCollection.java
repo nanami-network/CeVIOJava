@@ -5,7 +5,6 @@ import xyz.n7mn.dev.structure.TalkerComponentStructure;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class TalkerComponentCollection {
     private final Map<String, TalkerComponent> components = new HashMap<>();
