@@ -87,7 +87,7 @@ public class CastSettings {
     }
 
     public CastSettings setToneScale(int toneScale) {
-        structure.alpha = toneScale;
+        structure.toneScale = toneScale;
         write();
         return this;
     }

@@ -48,4 +48,14 @@ public class TalkerComponent {
     public TalkerComponentStructure getStructure() {
         return structure;
     }
+
+    @Override
+    public String toString() {
+        return "TalkerComponent{" +
+                "cevio=" + cevio +
+                ", settings=" + settings +
+                ", structure=" + structure +
+                ", value=" + getValue() +
+                '}';
+    }
 }
