@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'maven-publish'
 }
 
 group 'xyz.n7mn.dev'
@@ -18,3 +20,18 @@ dependencies {
     implementation group: 'net.java.dev.jna', name: 'jna', version: '5.5.0'
     implementation group: 'net.java.dev.jna', name: 'jna-platform', version: '5.5.0'
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = "7.6"
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+build.dependsOn shadowJar
