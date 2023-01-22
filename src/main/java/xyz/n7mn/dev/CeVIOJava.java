@@ -111,6 +111,13 @@ public class CeVIOJava {
         return (StringArrayStructure[]) byReference.toArray(length);
     }
 
+    public TalkerComponent getTalkerComponent(CastSettings settings, String name) {
+        checkHostStarted();
+        TalkerComponentStructure component = new TalkerComponentStructure();
+        impl.GetComponent(settings.getStructure(), Native.toByteArray(name, "Shift-JIS"), component);
+        return new TalkerComponent(settings, component);
+    }
+
     public void setTalkerComponent(CastSettings settings, TalkerComponent component) {
         checkHostStarted();
         impl.SetComponent(settings.getStructure(), component.getStructure());

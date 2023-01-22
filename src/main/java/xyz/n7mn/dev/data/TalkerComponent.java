@@ -34,7 +34,7 @@ public class TalkerComponent {
     }
 
     public void sync() {
-        this.structure = cevio.getTalkerComponentStructure(settings, structure.name);
+        this.structure = cevio.getTalkerComponent(settings, structure.name).getStructure();
     }
 
     public void write() {
