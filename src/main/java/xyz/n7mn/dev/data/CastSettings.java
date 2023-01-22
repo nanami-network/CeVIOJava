@@ -1,8 +1,11 @@
 package xyz.n7mn.dev.data;
 
+import com.sun.jna.Native;
+import com.sun.jna.ptr.PointerByReference;
 import xyz.n7mn.dev.CeVIOJava;
 import xyz.n7mn.dev.structure.CastSettingsStructure;
 import xyz.n7mn.dev.structure.PhonemeDataStructure;
+import xyz.n7mn.dev.structure.TalkerComponentStructure;
 
 public class CastSettings {
     private final CeVIOJava cevio;
@@ -102,13 +105,34 @@ public class CastSettings {
         return this;
     }
 
-    public TalkerComponentCollection getComponents() {
-        sync();
-        return cevio.getTalkerComponents(this);
+    public TalkerComponent getComponent(String name) {
+        cevio.checkHostStarted();
+        TalkerComponentStructure component = new TalkerComponentStructure();
+        cevio.getImpl().GetComponent(structure, Native.toByteArray(name, "Shift-JIS"), component);
+        return new TalkerComponent(this, component);
     }
 
+    public TalkerComponentCollection getComponents() {
+        cevio.checkHostStarted();
+        sync();
+        PointerByReference ref = new PointerByReference();
+        final int length = cevio.getImpl().GetComponents(structure, ref);
+        TalkerComponentStructure.ByReference byReference = new TalkerComponentStructure.ByReference(ref.getValue());
+        return new TalkerComponentCollection(this, (TalkerComponentStructure.ByReference[]) byReference.toArray(length));
+    }
+
+    /**
+     * 対象のキャストにセリフを喋らせます
+     * @param text　セリフ
+     * @param wait 終わるまで待たせるか（通常は true)
+     */
     public SpeakingState speak(String text, boolean wait) {
-        return cevio.speak(this, text, wait);
+        cevio.checkHostStarted();
+        SpeakingState state = new SpeakingState(cevio, cevio.getImpl().Speak(structure, Native.toByteArray(text, "Shift-JIS"), true));
+        if (wait) {
+            state.wait(0d);
+        }
+        return state;
     }
 
     public SpeakingState speak(String text) {
@@ -121,15 +145,23 @@ public class CastSettings {
      * @return 長さ (秒)
      */
     public double getTextDuration(String text) {
-        return cevio.getTextDuration(this, text);
+        return cevio.getImpl().GetTextDuration(structure, Native.toByteArray(text, "Shift-JIS"));
     }
 
     public PhonemeDataStructure[] getPhonemes(String text) {
-        return cevio.getPhonemes(this, text);
+        PointerByReference ref = new PointerByReference();
+        final int length = cevio.getImpl().GetPhonemes(structure, Native.toByteArray(text, "Shift-JIS"), ref);
+        PhonemeDataStructure.ByReference byReference = new PhonemeDataStructure.ByReference(ref.getValue());
+        return (PhonemeDataStructure[]) byReference.toArray(length);
     }
 
+    /**
+     * @param text セリフ
+     * @param path 保存先 (最後に .wavをつけてください！)
+     * @return 結果
+     */
     public boolean saveToFile(String text, String path) {
-        return cevio.save(this, text, path);
+        return cevio.getImpl().OutputWaveToFile(structure, Native.toByteArray(text, "Shift-JIS"), Native.toByteArray(path, "Shift-JIS"));
     }
 
     public void sync() {
